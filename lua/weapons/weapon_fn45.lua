@@ -108,7 +108,8 @@ SWEP.availableAttachments = {
 		["mount"] = {["picatinny"] = Vector(-3.5, 1.75, 0.05), ["pistolmount"] = Vector(-4.5, -0.4, 0.05)}
 	},
 	underbarrel = {
-		["mount"] = Vector(9.8, -0.6, -0.8),
+		[1] = {"laser5", Vector(0,0.25,0.2), {}},
+		["mount"] = Vector(12.5, -1, -1),
 		["mountAngle"] = Angle(0, 0, 90),
 		["mountType"] = "picatinny_small"
 	},
