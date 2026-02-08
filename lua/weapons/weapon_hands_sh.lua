@@ -716,15 +716,6 @@ function SWEP:Deploy()
 	return true
 end
 
-function SWEP:Holster()
-	local owner = self:GetOwner()
-	if owner.PlayerClassName == "headcrabzombie" then
-		return false
-	end
-
-	return true
-end
-
 function SWEP:CanPrimaryAttack()
 	return true
 end
@@ -1963,5 +1954,10 @@ function SWEP:Holster( wep )
 	local owner = self:GetOwner()
 
 	if owner:GetNetVar("handcuffed",false) then return false end
+
+	if owner.PlayerClassName == "headcrabzombie" then
+		return false
+	end
+
 	return true
 end
