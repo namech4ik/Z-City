@@ -121,7 +121,10 @@ function CLASS.On(self)
 		--\\ Npc relationships
 		local index = self:EntIndex()
 		hook.Add("OnEntityCreated", "relation_shipdo" .. index, function(ent)
-			if not IsValid(self) then hook.Remove("OnEntityCreated", "relation_shipdo" .. index) return end
+			if not IsValid(self) or self.PlayerClassName ~= "headcrabzombie" then
+				hook.Remove("OnEntityCreated","relation_shipdo" .. index)
+				return
+			end
 
 			if ent:IsNPC() then
 				if table.HasValue(rebels, ent:GetClass()) or table.HasValue(combines, ent:GetClass()) then
