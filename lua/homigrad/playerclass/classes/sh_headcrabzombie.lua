@@ -48,37 +48,55 @@ CLASS.CanUseDefaultPhrase = false
 CLASS.CanEmitRNDSound = false
 CLASS.CanUseGestures = false
 
+local fallbackMat = "models/zombie_classic/zombie_classic_sheet"
 function CLASS.On(self)
+	--\\ Remember old player cloth to set it later
 	local clothTbl = {}
 	if SERVER then
-		for i, v in pairs(self.CurAppearance.AClothes) do
-			clothTbl[i] = v
+		if self.CurAppearance then
+			for i, v in pairs(self.CurAppearance.AClothes) do
+				clothTbl[i] = v
+			end
 		end
 	end
+
 	if SERVER then
 		ApplyAppearance(self,nil,nil,nil,true)
 		local Appearance = self.CurAppearance or hg.Appearance.GetRandomAppearance()
 		Appearance.AAttachments = ""
+
 		self:SetNetVar("Accessories", "")
 		self.CurAppearance = Appearance
 	end
 
     self:SetNWString("PlayerName", "Zombie")
 	self:SetModel("models/zcity/player/zombie_classic.mdl")
+
+	--\\ Set cloth and other materials
 	if self:GetModel() == "models/zcity/player/zombie_classic.mdl" then
 		if SERVER then
 			self:SetBodygroup(1, 1)
 		end
-		self:SetSubMaterial(0, "")
+
+		self:SetSubMaterial(0, fallbackMat)
+
 		if SERVER then
-			self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/players_sheet"), hg.Appearance.Clothes[1][clothTbl["main"]])
-			self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/pants"), hg.Appearance.Clothes[1][clothTbl["pants"]])
-			self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/cross"), hg.Appearance.Clothes[1][clothTbl["boots"]])
+			if not table.IsEmpty(clothTbl) then
+				self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/players_sheet"), hg.Appearance.Clothes[1][clothTbl["main"]])
+				self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/pants"), hg.Appearance.Clothes[1][clothTbl["pants"]])
+				self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/cross"), hg.Appearance.Clothes[1][clothTbl["boots"]])
+			else
+				self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/players_sheet"), fallbackMat)
+				self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/pants"), fallbackMat)
+				self:SetSubMaterial(self:GetSubMaterialIdByName("distac/gloves/cross"), fallbackMat)
+			end
 		end
+
 		self:SetSubMaterial(4, "")
 	end
 
 	if SERVER then
+		--\\ Startup organism effects
 		if IsValid(self.organism) then
 			self.organism.temperature = 41
 			self.organism.brain = 0.05
@@ -100,18 +118,21 @@ function CLASS.On(self)
 			end
 		end
 
+		--\\ Npc relationships
 		local index = self:EntIndex()
-		hook.Add("OnEntityCreated", "relation_shipdo"..index, function(ent)
-			if not IsValid(self) then hook.Remove("OnEntityCreated","relation_shipdo"..index) return end
+		hook.Add("OnEntityCreated", "relation_shipdo" .. index, function(ent)
+			if not IsValid(self) then hook.Remove("OnEntityCreated", "relation_shipdo" .. index) return end
+
 			if ent:IsNPC() then
 				if table.HasValue(rebels, ent:GetClass()) or table.HasValue(combines, ent:GetClass()) then
-					v:AddEntityRelationship(self, D_HT, 99)
+					ent:AddEntityRelationship(self, D_HT, 99)
 				elseif table.HasValue(zombies, ent:GetClass()) then
-					v:AddEntityRelationship(self, D_LI, 99)
+					ent:AddEntityRelationship(self, D_LI, 99)
 				end
 			end
 		end)
 
+		--\\ Give hands if we don't have it
 		if self:HasWeapon("weapon_hands_sh") then
 			self:SelectWeapon("weapon_hands_sh")
 		else
@@ -121,7 +142,7 @@ function CLASS.On(self)
 	end
 end
 
---// Reset organism and npc relations
+--// Reset organism and npc relationship
 function CLASS.Off(self)
     if CLIENT then return end
 
@@ -140,6 +161,7 @@ function CLASS.Off(self)
 	hook.Remove("OnEntityCreated", "relation_shipdo"..self:EntIndex())
 end
 
+--// Reset npc relationship
 function CLASS.PlayerDeath(self)
 	for k, v in ipairs(ents.FindByClass("npc_*")) do
         if table.HasValue(rebels, v:GetClass()) then

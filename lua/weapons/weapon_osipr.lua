@@ -9,18 +9,14 @@ SWEP.Slot = 2
 SWEP.SlotPos = 10
 SWEP.ViewModel = ""
 SWEP.WorldModel = "models/weapons/arccw/w_irifle.mdl"
-SWEP.WorldModelFake = "models/weapons/arccw/c_irifle.mdl" -- Контент инсурги https://steamcommunity.com/sharedfiles/filedetails/?id=3437590840 
---uncomment for funny
---а еще надо настраивать заново zoompos
+SWEP.WorldModelFake = "models/weapons/arccw/c_irifle.mdl"
+
 SWEP.FakePos = Vector(26, -5.9, 8.8)
 SWEP.FakeAng = Angle(0, 180, 0)
 SWEP.AttachmentPos = Vector(0,0,0)
 SWEP.AttachmentAng = Angle(0,0,0)
 SWEP.FakeEjectBrassATT = "punch"
-//SWEP.MagIndex = 53
-//MagazineSwap
---Entity(1):GetActiveWeapon():GetWM():SetSubMaterial(0,"NULL")
---PrintTable(Entity(1):GetActiveWeapon():GetWM():GetAttachments())
+
 SWEP.FakeReloadSounds = {
 	[0.17] = "weapons/hmcd_ar2/ar2_rotate.wav",
 	[0.35] = "weapons/hmcd_ar2/ar2_magout.wav",
@@ -66,13 +62,9 @@ if CLIENT then
 		end,
 		[0.6] = function( self, timeMul )
 			if self:Clip1() < 1 then
-				//self:GetOwner():PullLHTowards()
+
 				self:GetWM():ManipulateBoneScale(1, vector_full)
-			else
-				//self:GetWM():ManipulateBoneScale(75, vector_full)
-				//self:GetWM():ManipulateBoneScale(76, vector_full)
-				//self:GetWM():ManipulateBoneScale(77, vector_full)
-			end 
+			end
 			self.AnimList["idle"] = "idle"
 			self.AnimList["reload"] = "reload"
 		end,
