@@ -23,7 +23,7 @@ SWEP.WorkWithFake = true
 SWEP.offsetVec = Vector(3, -2.5, -1)
 SWEP.offsetAng = Angle(-30, 20, -90)
 SWEP.ModelScale = 0.75
-SWEP.Color = Color(80, 255, 240)
+SWEP.Color = Color(0, 90, 255)
 SWEP.modeNames = {
 	[1] = "fury-13"
 }
