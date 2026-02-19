@@ -125,13 +125,14 @@ LoadModes()
 print("ZB modes loaded!")
 
 zb.oldHook = zb.oldHook or hook.Call
+local oldHook = zb.oldHook
 
 function hook.Call(name, gm, ...)
     local Current = zb.CROUND_MAIN or zb.CROUND or "tdm"
 
-    local ModeTable = zb.modes[Current]
-    
     if zb.modesHooks[Current] and zb.modesHooks[Current][name] then
+        local ModeTable = zb.modes[Current]
+
         local a, b, c, d, e, f = zb.modesHooks[Current][name](ModeTable, ...)
 
         if (a != nil) then
@@ -139,5 +140,5 @@ function hook.Call(name, gm, ...)
         end
     end
 
-    return zb.oldHook(name, gm, ...)
+    return oldHook(name, gm, ...)
 end
