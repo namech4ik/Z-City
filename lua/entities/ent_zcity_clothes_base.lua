@@ -10,10 +10,6 @@ ENT.Spawnable = false
 ENT.Model = "models/props_junk/cardboard_box003a.mdl"
 ENT.IconOverride = ""
 
-ZC_CLOTHES_SLOT_TORSO = 0
-ZC_CLOTHES_SLOT_PANTS = 1
-ZC_CLOTHES_SLOT_BOOTS = 2
-
 ENT.SlotOccupation = {
     --[ZC_CLOTHES_SLOT_TORSO] = true,
     --[ZC_CLOTHES_SLOT_PANTS] = true,
@@ -150,13 +146,14 @@ end
 --\\
     function ENT:OnRemove()
         if !IsValid(self.WearOwner) then return end
-        print(self.WearOwner)
+
         self:Unwear(self.WearOwner)
     end
 --//
 
 
 --\\ Render clothes
+    local vec = Vector(1,1,1)
     function ENT:RenderOnBody(entDrawOn)
         local fem = ThatPlyIsFemale(entDrawOn)
 
@@ -168,8 +165,15 @@ end
             model:SetNoDraw(true)
             model:SetSkin(data.Skin)
             model:SetBodyGroups(data.Bodygroups)
-            model:SetParent(ent)
+            model:SetParent(entDrawOn)
             model:AddEffects(EF_BONEMERGE)
+
+            if data.ModelSubMaterials then
+                for k,v in pairs(data.ModelSubMaterials) do
+                    local id = model:GetSubMaterialIdByName(k)
+                    model:SetSubMaterial(id, v)
+                end
+            end
 
             self:CallOnRemove("RemoveCloth",function()
                 if IsValid(self.renderModel) then
@@ -181,15 +185,12 @@ end
 
         local model = self.renderModel
 
-        local mdl = string.Split(string.sub(ent:GetModel(),1,-5),"/")[#string.Split(string.sub(ent:GetModel(),1,-5),"/")]
+        local mdl = string.Split(string.sub(entDrawOn:GetModel(),1,-5),"/")[#string.Split(string.sub(entDrawOn:GetModel(),1,-5),"/")]
         if mdl and model:GetFlexIDByName(mdl) then
             model:SetFlexWeight(model:GetFlexIDByName(mdl),1)
         end
 
         if model:GetParent() != entDrawOn then model:SetParent(entDrawOn) end
-
-        model:SetRenderOrigin(entDrawOn:GetPos())
-        model:SetRenderAngles(entDrawOn:GetAngles())
 
         model:DrawModel()
     end
@@ -221,5 +222,23 @@ end
         end
         ragdoll:SetNetVar("zc_clothes",Clothes)
         ply:SetNetVar("zc_clothes", {})
+    end)
+--//
+
+--\\ Temperature system
+    hook.Add("ZC_BodyTemperature", "ClothesSaveTemp", function(ply, org, timeValue, changeRate, MaxWarmMul, warmLoseMul)
+        local Clothes = ply:GetNetVar("zc_clothes", {})
+        if #Clothes < 1 then return end
+
+        for i = 1, #Clothes do
+            local Cloth = Clothes[i]
+            if !IsValid(Cloth) then continue end
+            if !Cloth.WarmSave then continue end
+            MaxWarmMul = MaxWarmMul + (Cloth.WarmSave / 2.5)
+            changeRate = changeRate * math.max(1 - Cloth.WarmSave, 0.1)
+            warmLoseMul = warmLoseMul * math.max(1 - Cloth.WarmSave, 0.1)
+        end
+
+        return changeRate, MaxWarmMul, warmLoseMul
     end)
 --//

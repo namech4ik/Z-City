@@ -1,3 +1,8 @@
+ZC_CLOTHES_SLOT_TORSO = 0
+ZC_CLOTHES_SLOT_PANTS = 1
+ZC_CLOTHES_SLOT_BOOTS = 2
+ZC_CLOTHES_SLOT_BACKPACK = 3
+
 local clothes = {
     wintercoat1 = {
         PrintName = "Winter Coat 1",
@@ -16,7 +21,8 @@ local clothes = {
             HideSubMaterails = {"models/humans/female/group01/players_sheet"},
             Skin = 0,
             Bodygroups = "0000000000000"
-        }
+        },
+        WarmSave = 0.15
     },
     suit_coat1 = {
         PrintName = "Suit Coat 1",
@@ -55,8 +61,112 @@ local clothes = {
             Skin = 0,
             Bodygroups = "0000000000000"
         }
-    }
+    },
+    mountaineering_jacket1 = {
+        PrintName = "Mountaineering jacket 1",
+        Model = "models/props_junk/cardboard_box003a.mdl",
+        SlotOccupation = {
+            [ZC_CLOTHES_SLOT_TORSO] = true
+        },
+        Male = {
+            Model = "models/tnb/halflife2/cca/male_torso_metropolice_winter.mdl",
+            ModelSubMaterials = {
+                ["models/tnb/cca/c13/metro13_retail"] = "NULL",
+                ["models/tnb/cca/c13/metro13_armband4"] = "NULL",
+                ["models/tnb/cca/c13/metro13_fc"] = "NULL"
+            },
+            HideSubMaterails = {"models/humans/male/group01/players_sheet"},
+            Skin = 2,
+            Bodygroups = "0000000000000"
+        },
+        FeMale = {
+            Model = "models/tnb/halflife2/cca/female_torso_metropolice_winter.mdl",
+            ModelSubMaterials = {
+                ["models/tnb/cca/c13/metro13_retail"] = "NULL",
+                ["models/tnb/cca/c13/metro13_armband4"] = "NULL",
+                ["models/tnb/cca/c13/metro13_fc"] = "NULL"
+            },
+            HideSubMaterails = {"models/humans/female/group01/players_sheet"},
+            Skin = 2,
+            Bodygroups = "0000000000000"
+        },
+        WarmSave = 0.75
+    },
+
+    mountaineering_jacket2 = {
+        PrintName = "Mountaineering jacket 2",
+        Model = "models/props_junk/cardboard_box003a.mdl",
+        SlotOccupation = {
+            [ZC_CLOTHES_SLOT_TORSO] = true
+        },
+        Male = {
+            Model = "models/tnb/halflife2/cca/male_torso_metropolice_winter.mdl",
+            ModelSubMaterials = {
+                ["models/tnb/cca/c13/metro13_retail"] = "NULL",
+                ["models/tnb/cca/c13/metro13_armband4"] = "NULL",
+                ["models/tnb/cca/c13/metro13_fc"] = "NULL"
+            },
+            HideSubMaterails = {"models/humans/male/group01/players_sheet"},
+            Skin = 3,
+            Bodygroups = "0000000000000"
+        },
+        FeMale = {
+            Model = "models/tnb/halflife2/cca/female_torso_metropolice_winter.mdl",
+            ModelSubMaterials = {
+                ["models/tnb/cca/c13/metro13_retail"] = "NULL",
+                ["models/tnb/cca/c13/metro13_armband4"] = "NULL",
+                ["models/tnb/cca/c13/metro13_fc"] = "NULL"
+            },
+            HideSubMaterails = {"models/humans/female/group01/players_sheet"},
+            Skin = 3,
+            Bodygroups = "0000000000000"
+        },
+        WarmSave = 0.75
+    },
+
+
+    backpack1 = {
+        PrintName = "Backpack 1",
+        Model = "models/props_junk/cardboard_box003a.mdl",
+        SlotOccupation = {
+            [ZC_CLOTHES_SLOT_BACKPACK] = true
+        },
+        Male = {
+            Model = "models/tnb/halflife2/male_backpack1.mdl",
+            HideSubMaterails = {},
+            Skin = 5,
+            Bodygroups = "0000000000000"
+        },
+        FeMale = {
+            Model = "models/tnb/halflife2/female_backpack1.mdl",
+            HideSubMaterails = {},
+            Skin = 0,
+            Bodygroups = "0000000000000"
+        }
+    },
+
+    winter_pants1 = {
+        PrintName = "Winter Pants 1",
+        Model = "models/props_junk/cardboard_box003a.mdl",
+        SlotOccupation = {
+            [ZC_CLOTHES_SLOT_PANTS] = true
+        },
+        Male = {
+            Model = "models/tnb/halflife/male_legs_medic.mdl",
+            HideSubMaterails = {"distac/gloves/pants", "distac/gloves/cross"},
+            Skin = 5,
+            Bodygroups = "0000000000000"
+        },
+        FeMale = {
+            Model = "models/tnb/halflife/female_legs_medic.mdl",
+            HideSubMaterails = {"distac/gloves/pants", "distac/gloves/cross"},
+            Skin = 0,
+            Bodygroups = "0000000000000"
+        },
+        WarmSave = 0.5
+    },
 }
+--ModelSubMaterials = {[""] = ""},
 
 local function register()
     for k, v in pairs(clothes) do
@@ -71,12 +181,20 @@ local function register()
 
         ENT.Male = v.Male
         ENT.FeMale = v.FeMale
+        
+        if v.WarmSave then
+            ENT.WarmSave = v.WarmSave
+        end
 
         scripted_ents.Register(ENT, "ent_zcity_colthes_" .. k)
     end
 end
 
-register()
+hook.Add("Think","remove-me-clothes",function()
+    register()
+    hook.Remove("Think","remove-me-clothes")
+end)
+
 hook.Add("Initialize", "init-clothes", register)
 --[[
 
