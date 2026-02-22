@@ -744,7 +744,7 @@ hook.Add("Player-Ragdoll think", "organism-think-client-blood", function(ply, en
 				org.breathed = true
 				local heartbeat = org.heartbeat or 0
 				local muffed
-				local pitch = math.Clamp(org.heartbeat / 250 * 100, 90, 120) * math.Clamp((org.stamina and (1 + (1 - org.stamina[1] / 180) * 0.2) or 1), 1, 1.2)
+				local pitch = math.Clamp(heartbeat / 250 * 100, 90, 120) * math.Clamp((org.stamina and org.stamina[1] and (1 + (1 - org.stamina[1] / 180) * 0.2) or 1), 1, 1.2)
 
 				if ent.armors then
 					muffed = ent.armors["face"] == "mask2" or ent.PlayerClassName == "Combine"
