@@ -121,6 +121,10 @@ end
                 self.OldSubMaterials[mat] = entUser:GetSubMaterial(mat)
 
                 entUser:SetSubMaterial(mat,"NULL")
+                local curchar = hg.GetCurrentCharacter(entUser)
+                if IsValid(curchar) and curchar:IsRagdoll() then
+                    curchar:SetSubMaterial(mat,"NULL")
+                end
             end
         end
 
@@ -149,6 +153,10 @@ end
         if !bDontChangeMaterials and self.OldSubMaterials then
             for k,v in pairs(self.OldSubMaterials) do
                 entUser:SetSubMaterial(k,v)
+                local curchar = hg.GetCurrentCharacter(entUser)
+                if IsValid(curchar) and curchar:IsRagdoll() then
+                    curchar:SetSubMaterial(k,v)
+                end
             end
             table.Empty(self.OldSubMaterials)
         end
