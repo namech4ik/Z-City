@@ -250,11 +250,9 @@ end
 --\\ Render hook
     hook.Add("CoolPostDrawAppearance", "ZC_ClothesDraw",function(ent, ply)
         local Clothes = ply:GetNetVar("zc_clothes", {})
-        PrintTable(Clothes)
         if #Clothes < 1 then return end
 
         for i = 1, #Clothes do
-            print(Clothes[i])
             local Cloth = Entity(Clothes[i])
             if !IsValid(Cloth) then continue end
             Cloth:RenderOnBody(ent)
