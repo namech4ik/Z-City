@@ -2019,7 +2019,7 @@ function SWEP:SetHandPos(noset)
 		self.lhandik = false
 	end
 	
-	if (ent ~= ply and ent ~= ply.OldRagdoll) then
+	if (ent ~= ply and ent ~= ply.OldRagdoll and !hg.RagdollCombatInUse(ply)) then
 		self.lhandik = self.lhandik and !(hg.KeyDown(ply, IN_FORWARD + IN_BACK) and !self.reload and !ply:InVehicle())
 	end
 
