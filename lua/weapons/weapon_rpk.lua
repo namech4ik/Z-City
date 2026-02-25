@@ -109,6 +109,19 @@ function SWEP:ModelCreated(model)
 	end
 end
 
+function SWEP:OnCantReload()
+    if self.Inspecting and self.Inspecting > CurTime() then return end
+    self.Inspecting = CurTime() + 3
+    
+    self:PlayAnim("inspect_enter", 1, false, function(self)
+        self:PlayAnim("inspect_loop", 0.5, false, function(self)
+            self:PlayAnim("inspect_exit", 3, false, function(self)
+                self:PlayAnim("idle", 1)
+            end, false, true)
+        end, false, true)
+    end, false, true)
+end
+
 SWEP.ReloadHold = nil
 SWEP.FakeVPShouldUseHand = false
 

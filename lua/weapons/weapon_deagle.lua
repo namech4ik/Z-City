@@ -61,6 +61,19 @@ function SWEP:ModelCreated(model)
 	model:SetSkin(self:GetDeagleSkin())
 end
 
+function SWEP:OnCantReload()
+    if self.Inspecting and self.Inspecting > CurTime() then return end
+    self.Inspecting = CurTime() + 3
+    
+    self:PlayAnim("enter_inspect", 1, false, function(self)
+        self:PlayAnim("idle_inspect", 0.5, false, function(self)
+            self:PlayAnim("exit_inspect", 4, false, function(self)
+                self:PlayAnim("idle", 1)
+            end, false, true)
+        end, false, true)
+    end, false, true)
+end
+
 SWEP.FakeReloadSounds = {
 	[0.15] = "weapons/universal/uni_crawl_l_03.wav",
 	[0.22] = "weapons/arccw_ur/deagle/magout.ogg",

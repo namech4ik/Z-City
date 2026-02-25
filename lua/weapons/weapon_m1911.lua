@@ -83,6 +83,19 @@ SWEP.FakeEmptyReloadSounds = {
 
 local vecfull = Vector(1,1,1)
 
+function SWEP:OnCantReload()
+    if self.Inspecting and self.Inspecting > CurTime() then return end
+    self.Inspecting = CurTime() + 3
+    
+    self:PlayAnim("enter_inspect", 1, false, function(self)
+        self:PlayAnim("idle_inspect", 1, false, function(self)
+            self:PlayAnim("exit_inspect", 2, false, function(self)
+                self:PlayAnim("idle", 1)
+            end, false, true)
+        end, false, true)
+    end, false, true)
+end
+
 local function HideMag(model, unhide)
 	if !IsValid(model) then return end
 	local vec = unhide and vecfull or vector_origin

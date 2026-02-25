@@ -110,6 +110,37 @@ function SWEP:ModelCreated(model)
 	end
 end
 
+SWEP.AnimsEvents = {
+	["AmmoCheck"] = {
+		[0.05] = function(self)
+			self:EmitSound("weapons/universal/uni_crawl_l_03.wav",55)
+		end,
+		[0.15] = function(self)
+			self:EmitSound("weapons/arccw_ud/m16/grab.ogg",55)
+		end,
+		[0.18] = function(self)
+			self:EmitSound("weapons/rifle_ruger1022/ruger_clipout.wav",55)
+		end,
+		[0.7] = function(self)
+			self:EmitSound("weapons/rifle_ruger1022/ruger_clipin.wav",55)
+		end,
+		[0.8] = function(self)
+			self:EmitSound("weapons/universal/uni_crawl_l_03.wav",55)
+		end,
+	},
+}
+
+function SWEP:OnCantReload()
+    --inspect1
+    --print("huy")
+    if self.Inspecting and self.Inspecting > CurTime() then return end
+    self.Inspecting = CurTime() + 3
+    self:PlayAnim("AmmoCheck", 3, false, function(self)
+        self:PlayAnim("idle", 1)
+        --self.Inspecting = false
+    end, false, true)
+end
+
 SWEP.ReloadHold = nil
 SWEP.FakeVPShouldUseHand = false
 SWEP.NoIdleLoop = true

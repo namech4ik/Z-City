@@ -85,6 +85,17 @@ SWEP.FakeReloadEvents = {
 	--end,
 }
 
+function SWEP:OnCantReload()
+    --inspect1
+    --print("huy")
+    if self.Inspecting and self.Inspecting > CurTime() then return end
+    self.Inspecting = CurTime() + 3
+    self:PlayAnim("inspect", 3, false, function(self)
+        self:PlayAnim("idle", 1)
+        --self.Inspecting = false
+    end, false, true)
+end
+
 SWEP.AnimList = {
 	["idle"] = "idle",
 	["reload"] = "reload",
