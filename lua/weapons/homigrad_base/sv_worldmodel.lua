@@ -7,6 +7,7 @@ function SWEP:CreateWorldModel()
 	model:SetMaterial("models/wireframe")
 	model:Spawn()
 	timer.Simple(0,function()
+		if !IsValid(model) then return end
 		model:PhysicsDestroy()
 	end)
 	model:SetMoveType(MOVETYPE_NONE)
