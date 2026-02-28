@@ -744,11 +744,14 @@ function hg.FakeUp(ply, forced, instant)
 
 	if IsValid(ragdoll) and ragdoll:IsOnFire() then
 		timer.Simple(0.1,function()
+			print("asd")
 			--ply.fires = ragdoll.fires
 			--ply:Ignite(30 * ((ply.shouldburn or 0) + 1),16)
 			if ragdoll.fires then
 				for fire, pos in pairs(ragdoll.fires) do
+					fire:Remove()
 					local fire = CreateVFire(ply, ply:GetPos(), vector_up, 50, ply)
+					print(fire)
 				end
 			end
 		end)--]]

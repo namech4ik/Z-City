@@ -63,7 +63,7 @@ end
 function vFireIsCharacter(ent)
 	if !IsValid(ent) then return false end
 	if ent.vFireIsCharacter != nil then return ent.vFireIsCharacter end
-	local isCharacter = ent:IsRagdoll() or ent:IsNPC() or (ent:IsPlayer() and hg.GetCurrentCharacter(ent):IsPlayer())
+	local isCharacter = ent:IsRagdoll() or ent:IsNPC() or ent:IsPlayer()
 	ent.vFireIsCharacter = isCharacter
 end
 
